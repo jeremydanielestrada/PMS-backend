@@ -12,8 +12,9 @@ use App\Http\Controllers\Api\AuthController;
 Route::controller(AuthController::class)->group(function (){
     Route::post('/register','register')->name('user.register');
     Route::post('/login','login')->name('user.login');
-    Route::post('/logout','logout');
 });
+    Route::post('/logout',[AuthController::class, 'logout'])->middleware('auth:sanctum');
+
 
 Route::get('/', function(){
     return "test route";
