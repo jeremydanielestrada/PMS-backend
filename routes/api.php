@@ -4,6 +4,7 @@ use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProjectController;
 
 
 //Public routes
@@ -23,7 +24,7 @@ Route::get('/', function(){
 
 
 
-
-// Route::middleware('auth:sanctum')->group(function () {
-
-// });
+///Protetected Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('projects', ProjectController::class);
+});
