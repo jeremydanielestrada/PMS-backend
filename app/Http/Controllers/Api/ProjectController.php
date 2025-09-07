@@ -19,42 +19,51 @@ class ProjectController extends Controller
 
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(ProjectRequest $request)
     {
         $fields = $request->validated();
-        $fields['owner_id'] = $fields['owner_id'] ?? auth()->id();
+
+        $fields['owner_id'] = $fields['owner_id'] ?? auth()->id(); //safe error, waiting for user auth
 
         $project = Project::create($fields);
 
         return response()->json($project, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+
+        return response()->json($project);
     }
 
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(ProjectRequest $request, string $id)
     {
-        //
+
+        $project = Project::findOrFail($id);
+
+        $fields = $request->validated();
+
+        $project->update($fields);
+
+
+        return response()->json($project, 200);
+
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+
+        $project->delete();
+
+        return response()->json($project,200);
     }
 }
