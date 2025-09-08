@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ProjectMemberController;
 
 
 //Public routes
@@ -27,4 +28,5 @@ Route::get('/', function(){
 ///Protetected Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('project/members', ProjectMemberController::class);
 });
