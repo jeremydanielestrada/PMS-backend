@@ -24,7 +24,7 @@ class ProjectController extends Controller
     {
         $fields = $request->validated();
 
-        $fields['owner_id'] = $fields['owner_id'] ?? auth()->id(); //safe error, waiting for user auth
+        $fields['owner_id'] = auth()->id();
 
         $project = Project::create($fields);
 
