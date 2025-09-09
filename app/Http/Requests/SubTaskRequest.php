@@ -11,7 +11,7 @@ class SubTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,24 @@ class SubTaskRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+
+        if(request()->routeIs('subtasks.store')){
+
+            return [
+                    'task_id'       => 'required|exists:tasks,id',
+                    'title'         => 'required|string|max:255',
+                    'is_completed'  => 'required|boolean',
+                  ];
+        }else if(request()->routeIs('subtasks.update')){
+            return [
+                    'task_id'       => 'sometimes|exists:tasks,id',
+                    'title'         => 'sometimes|string|max:255',
+                    'is_completed'  => 'sometimes|boolean',
+                  ];
+
+        }
+
+
+        return[];
     }
 }
