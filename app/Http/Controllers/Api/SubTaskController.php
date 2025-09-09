@@ -4,62 +4,65 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\SubTask;
+use App\Http\Requests\SubTaskRequest;
 
 class SubTaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $subtasks = SubTask::with('task')->get();
+
+        return response()->json($subtasks);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+
+
+    public function store(SubTaskRequest $request)
     {
-        //
+        $fields = $request->validated();
+
+        $subtask = SubTask::create($fields);
+
+        return response()->json(
+                   [
+                          $subtask, 'message' => 'Created subtask succesfully'
+                         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        $subtask = SubTask::with('task')->findOrFail($id);
+
+
+        return response()->json($subtask);
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+
+
+
+    public function update(SubTaskRequest $request, string $id)
     {
-        //
+        $subtask = SubTask::findOrFail($id);
+
+        $fields = $request->validated();
+
+        $subtask->update($fields);
+
+        return response()->json($subtask);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+         $subtask = SubTask::findOrFail($id);
+
+         $subtask->delete();
+
+         return response()->json('Subtask deleted');
     }
 }
