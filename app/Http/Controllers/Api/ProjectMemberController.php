@@ -25,9 +25,11 @@ class ProjectMemberController extends Controller
 
     public function store(ProjectMemberRequest $request){
 
+
              $fields = $request->validated();
 
-             $this->authorize('create', $fields);
+            //Authorize against the ProjectMember class
+            $this->authorize('create', ProjectMember::class);
 
              $fields['user_id'] = $fields['user_id'] ?? auth()->id();
 
@@ -56,7 +58,7 @@ class ProjectMemberController extends Controller
 
               $fields = $request->validated();
 
-              $project_member = ProjectMember::update($fields);
+              $project_member->ProjectMember::update($fields);
 
               return response()->json($project_member, 200);
 

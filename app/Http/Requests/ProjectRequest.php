@@ -24,12 +24,14 @@ class ProjectRequest extends FormRequest
             if(request()->routeIs('projects.store')){
                 return[
                     'name'       => 'required|string|max:255',
+                    'owner_id'   => 'required|exists:users,id',
                     'description'=> 'nullable|string',
                     'due_date'   => 'nullable|date|after_or_equal:today',
                 ];
             }else if(request()->routeIs('projects.update')){
                 return[
                     'name'       =>'sometimes|required|string|max:255',
+                    'owner_id'   => 'sometimes|exists:users,id',
                     'description'=>'sometimes|nullable|string',
                     'due_date'   =>'sometimes|nullable|date|after_or_equal:today',
                 ];
