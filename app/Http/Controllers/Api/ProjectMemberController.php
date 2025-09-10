@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\ProjectMember;
 use App\Http\Requests\ProjectMemberRequest;
 use App\Http\Requests\ProjectRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProjectMemberController extends Controller
 {
-
+    use AuthorizesRequests;
     public function index(){
 
             $project_member =  ProjectMember::with(['project', 'user'])->get();
@@ -26,6 +27,8 @@ class ProjectMemberController extends Controller
 
              $fields = $request->validated();
 
+             $this->authorize('create', $fields);
+
              $fields['user_id'] = $fields['user_id'] ?? auth()->id();
 
              $project_member = ProjectMember::create($fields);
@@ -37,9 +40,9 @@ class ProjectMemberController extends Controller
 
     public function show(string $id){
 
-            $project_member = ProjectMember::findOrFail($id);
+           $project_member = ProjectMember::findOrFail($id);
 
-            return response()->json($project_member );
+           return response()->json($project_member );
 
     }
 
@@ -48,6 +51,8 @@ class ProjectMemberController extends Controller
     public function update(ProjectRequest $request, string $id){
 
              $project_member = ProjectMember::findOrFail($id);
+
+             $this->authorize('update',$project_member);
 
               $fields = $request->validated();
 
@@ -61,6 +66,8 @@ class ProjectMemberController extends Controller
     public function destroy(string $id){
 
             $project_member = ProjectMember::findOrFail($id);
+
+            $this->authorize('delete', $project_member);
 
             $project_member->delete();
 
