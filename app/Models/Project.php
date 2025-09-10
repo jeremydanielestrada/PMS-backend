@@ -25,6 +25,14 @@ class Project extends Model
         return $this->hasMany(Task::class,'project_id');
     }
 
+
+
+     public function activity_logs():HasMany{
+
+        return $this->hasMany(ActivityLog::class,'projects_id');
+    }
+
+
 protected $fillable = [
     'name',
     'description',

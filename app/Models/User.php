@@ -27,6 +27,13 @@ class User extends Authenticatable
 
 
 
+     public function activity_logs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class,'users_id');
+    }
+
+
+
     /**
      * The attributes that are mass assignable.
      *
