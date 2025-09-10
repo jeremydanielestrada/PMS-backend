@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProjectController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +26,10 @@ class ProjectController extends Controller
     {
         $fields = $request->validated();
 
-        $fields['owner_id'] = auth()->id();
+       // If admin provided owner_id, use it; otherwise use current user
+         $fields['owner_id'] = (auth()->user()->role === 'admin' && isset($fields['owner_id']))
+        ? $fields['owner_id']
+        : auth()->id();
 
         $project = Project::create($fields);
 
@@ -42,10 +47,13 @@ class ProjectController extends Controller
 
 
 
+
     public function update(ProjectRequest $request, string $id)
     {
 
         $project = Project::findOrFail($id);
+
+        $this->authorize('update',$project);
 
         $fields = $request->validated();
 
@@ -61,6 +69,8 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         $project = Project::findOrFail($id);
+
+        $this->authorize('delete',$project);
 
         $project->delete();
 

@@ -34,6 +34,7 @@ class User extends Authenticatable
 
 
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -47,6 +48,13 @@ class User extends Authenticatable
         'role',
         'profile_img',
     ];
+
+
+
+
+    public function isAdmin(){
+        return $this->role === 'admin';
+    }
 
     /**
      * The attributes that should be hidden for serialization.
