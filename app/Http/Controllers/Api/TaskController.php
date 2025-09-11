@@ -49,7 +49,7 @@ class TaskController extends Controller
         $task->updated($fields);
 
 
-        return response()->json('$task');
+        return response()->json($task);
     }
 
 

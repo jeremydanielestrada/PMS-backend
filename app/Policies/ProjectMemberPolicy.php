@@ -22,7 +22,7 @@ class ProjectMemberPolicy
 
     public function create(User $user): bool
     {
-        return  $user->role === 'leader';
+        return  $user->isAdmin();
     }
 
 

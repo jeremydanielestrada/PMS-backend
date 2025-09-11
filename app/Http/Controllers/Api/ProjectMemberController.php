@@ -28,8 +28,6 @@ class ProjectMemberController extends Controller
 
              $fields = $request->validated();
 
-            //Authorize against the ProjectMember class
-            $this->authorize('create', ProjectMember::class);
 
              $fields['user_id'] = $fields['user_id'] ?? auth()->id();
 
