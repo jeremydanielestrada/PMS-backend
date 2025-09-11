@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SubTask;
 use App\Http\Requests\SubTaskRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SubTaskController extends Controller
 {
+
+    use AuthorizesRequests;
 
     public function index()
     {
@@ -24,6 +27,8 @@ class SubTaskController extends Controller
     {
         $fields = $request->validated();
 
+        $this->authorize('create',SubTask::class);
+
         $subtask = SubTask::create($fields);
 
         return response()->json(
@@ -37,6 +42,8 @@ class SubTaskController extends Controller
     {
         $subtask = SubTask::with('task')->findOrFail($id);
 
+        $this->authorize('view',$subtask);
+
 
         return response()->json($subtask);
 
@@ -49,6 +56,8 @@ class SubTaskController extends Controller
     {
         $subtask = SubTask::findOrFail($id);
 
+         $this->authorize('update',$subtask);
+
         $fields = $request->validated();
 
         $subtask->update($fields);
@@ -60,6 +69,8 @@ class SubTaskController extends Controller
     public function destroy(string $id)
     {
          $subtask = SubTask::findOrFail($id);
+
+         $this->authorize('delete',$subtask);
 
          $subtask->delete();
 
