@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
 
     public function index()
     {
@@ -22,6 +24,8 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $fields = $request->validated();
+
+        $this->authorize('create',Task::class);
 
         $task = Task::create($fields);
 
@@ -44,6 +48,8 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        $this->authorize('update',$task);
+
         $fields = $request->validated();
 
         $task->updated($fields);
@@ -56,6 +62,8 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
           $task = Task::findOrFail($id);
+
+          $this->authorize('delete',$task);
 
           $task->delete();
 

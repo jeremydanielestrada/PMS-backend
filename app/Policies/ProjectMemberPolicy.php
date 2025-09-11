@@ -16,26 +16,10 @@ class ProjectMemberPolicy
             return true;
         }
 
-        return null;
+        return false;
     }
 
 
-    public function create(User $user): bool
-    {
-        return  $user->isAdmin();
-    }
-
-
-    public function update(User $user, ProjectMember $projectMember): bool
-    {
-          return  $user->role === 'leader' &&  $user->id ===  $projectMember->user_id;
-    }
-
-
-    public function delete(User $user, ProjectMember $projectMember): bool
-    {
-        return  $user->role === 'leader' &&  $user->id ===  $projectMember->user_id;
-    }
 
 
 }

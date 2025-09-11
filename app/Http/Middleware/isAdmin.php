@@ -16,10 +16,12 @@ class isAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->user() || !$request->user()->isAdmin()) {
-            return redirect()->route('projects.index');
-      }
+            return response()->json([
+                'error' => 'Unauthorized. Admin access required.'
+            ], 403);
+        }
 
-        return next($request);
+        return $next($request);
+    }
 }
 
-}
