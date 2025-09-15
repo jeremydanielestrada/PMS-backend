@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ProjectMemberController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\SubTaskController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\isAdmin;
 
 
@@ -32,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projectmembers', ProjectMemberController::class);
     Route::apiResource('tasks',TaskController::class);
     Route::apiResource('subtasks',SubTaskController::class);
+    Route::get('/users',[UserController::class,'index']);
 });
 
 
