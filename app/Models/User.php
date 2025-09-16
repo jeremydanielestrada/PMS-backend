@@ -57,7 +57,7 @@ class User extends Authenticatable
     }
 
 
-     public function isTeamLeader(){
+     public function isLeader(){
         return $this->role === 'leader';
     }
 

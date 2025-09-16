@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\ProjectMember;
 
 class ProjectController extends Controller
 {
@@ -16,7 +17,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::with('user')->get();
+        return Project::with(['user', 'project_members'])->get();
     }
 
 
@@ -34,6 +35,12 @@ class ProjectController extends Controller
         : auth()->id();
 
         $project = Project::create($fields);
+
+        ProjectMember::create([
+                'project_id' => $project->id,
+                'user_id' => $fields['owner_id'],
+                'role' => 'leader'
+        ]);
 
         return response()->json($project, 201);
     }

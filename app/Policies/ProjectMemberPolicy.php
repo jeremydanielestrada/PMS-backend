@@ -16,10 +16,25 @@ class ProjectMemberPolicy
             return true;
         }
 
-        return false;
     }
 
 
 
+
+    public function create(User $user){
+        return $user->isLeader();
+    }
+
+
+
+    public function update(User $user){
+        return $user->isLeader();
+    }
+
+
+
+    public function delete(User $user){
+        return $user->isLeader();
+    }
 
 }
