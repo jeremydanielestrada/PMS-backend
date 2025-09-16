@@ -16,8 +16,14 @@ class ProjectPolicy
             return true;
         }
 
-        return false;
     }
+
+
+     public function create(User $user)
+    {
+        return $user->isAdmin();
+    }
+
 
 
 

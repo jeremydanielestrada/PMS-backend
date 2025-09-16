@@ -53,12 +53,12 @@ class User extends Authenticatable
 
 
     public function isAdmin(){
-        return $this->role === 'Admin';
+        return $this->role === 'admin';
     }
 
 
      public function isTeamLeader(){
-        return $this->role === 'Team Leader';
+        return $this->role === 'leader';
     }
 
     /**
