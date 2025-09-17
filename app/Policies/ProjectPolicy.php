@@ -19,7 +19,7 @@ class ProjectPolicy
     }
 
 
-     public function create(User $user)
+     public function create(User $user,)
     {
         return $user->isAdmin();
     }
@@ -27,16 +27,16 @@ class ProjectPolicy
 
 
 
-         public function update(User $user)
+         public function update(User $user,  Project $project)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $project->id === $project->owner_id;
     }
 
 
 
-         public function delete(User $user)
+         public function delete(User $user,  Project $project)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $project->id === $project->owner_id;
     }
 
 

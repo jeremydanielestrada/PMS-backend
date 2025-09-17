@@ -15,9 +15,23 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Project::with(['user', 'project_members'])->get();
+        $query = Project::query()->with(['user', 'project_members']);
+
+        if ($request->has('q')) {
+                $search = $request->input('q');
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+                });
+
+            }
+
+
+        $projects = $query->paginate($request->get('per_page',10));
+
+        return response()->json($projects);
     }
 
 

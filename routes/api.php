@@ -30,7 +30,7 @@ Route::get('/', function(){
 ///Protetected Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projects', ProjectController::class);
-    Route::apiResource('projectmembers', ProjectMemberController::class);
+    Route::apiResource('project-members', ProjectMemberController::class);
     Route::apiResource('tasks',TaskController::class);
     Route::apiResource('subtasks',SubTaskController::class);
     Route::get('/users',[UserController::class,'index']);
