@@ -20,9 +20,6 @@ Route::controller(AuthController::class)->group(function (){
     Route::post('/logout',[AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 
-Route::get('/', function(){
-    return "test route";
-});
 
 
 

@@ -10,6 +10,13 @@ class UserController extends Controller
 {
 
     public function index(){
-        return User::with(['projects','tasks'])->get();
+      $users = User::with(['projects','tasks'])
+      ->where('role', '!=', 'admin')
+      -> get();
+
+
+     return response()->json($users);
     }
+
+
 }
