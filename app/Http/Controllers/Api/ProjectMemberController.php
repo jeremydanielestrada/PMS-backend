@@ -8,6 +8,8 @@ use App\Models\ProjectMember;
 use App\Http\Requests\ProjectMemberRequest;
 use App\Http\Requests\ProjectRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ProjectMemberController extends Controller
 {
@@ -25,16 +27,37 @@ class ProjectMemberController extends Controller
 
     public function store(ProjectMemberRequest $request){
 
+            try{
 
              $fields = $request->validated();
 
+
              $this->authorize('create', ProjectMember::class);
 
-             $fields['user_id'] = $fields['user_id'] ?? auth()->id();
+            //  $fields['user_id'] = $fields['user_id'] ?? auth()->id();
 
              $project_member = ProjectMember::create($fields);
 
              return response()->json($project_member, 200);
+
+            }catch(Exception $e){
+
+            Log::error('Project Member Creation Failed', [
+                'error' => $e->getMessage(),
+                'fields' => $fields ?? null
+            ]);
+
+             return response()->json([
+            'error' => 'Failed to create project',
+
+            'message' => $e->getMessage()
+
+            ], 500);
+
+
+            }
+
+
 
     }
 
@@ -57,7 +80,7 @@ class ProjectMemberController extends Controller
 
               $fields = $request->validated();
 
-              $project_member->ProjectMember::update($fields);
+              $project_member->update($fields);
 
               return response()->json($project_member, 200);
 

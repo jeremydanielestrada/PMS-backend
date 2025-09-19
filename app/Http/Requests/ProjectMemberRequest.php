@@ -22,7 +22,7 @@ class ProjectMemberRequest extends FormRequest
     public function rules(): array
     {
 
-        if(request()->routeIs('projectmembers.store')){
+        if(request()->routeIs('project-members.store')){
 
         return [
             'project_id' => 'required|exists:projects,id',
@@ -30,7 +30,7 @@ class ProjectMemberRequest extends FormRequest
             'role'       => 'required|string|max:255',
                ];
 
-        }else if (request()->routeIs('projectmembers.update')){
+        }else if (request()->routeIs('project-members.update')){
 
         return [
             'project_id' => 'sometimes|exists:projects,id',
