@@ -9,11 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Task extends Model
 {
 
-    public function user():BelongsTo
-    {
-        return $this->belongsTo(User::class,'assigned_to');
-    }
-
     public function project():BelongsTo
     {
         return $this->belongsTo(Project::class,'project_id');
