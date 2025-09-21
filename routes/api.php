@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('project-members', ProjectMemberController::class);
     Route::apiResource('tasks',TaskController::class);
+    Route::put('tasks/{task}/status', [TaskController::class, 'updateStatus']);
     Route::apiResource('subtasks',SubTaskController::class);
     Route::get('/users',[UserController::class,'index']);
 });

@@ -7,16 +7,28 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\User;
 
 class TaskController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::with(['user','project'])->get();
+        $query = Task::with(['user', 'project', 'assignedUser']);
 
-        return response()->json($tasks, 200);
+        // Filter by project if specified
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        // Non-admins only see tasks from their projects
+        if (!auth()->user()->isAdmin()) {
+            $userProjectIds = auth()->user()->projectMembers()->pluck('project_id');
+            $query->whereIn('project_id', $userProjectIds);
+        }
+
+        return response()->json($query->get());
     }
 
 
@@ -44,19 +56,39 @@ class TaskController extends Controller
 
 
 
-    public function update(TaskRequest $request, string $id)
+    public function update(TaskRequest $request, Task $task)
     {
-        $task = Task::findOrFail($id);
-
-        $this->authorize('update',$task);
+        $this->authorize('update', $task);
 
         $fields = $request->validated();
 
+        // Only admins and project leaders can reassign tasks
+        if (isset($fields['assigned_to']) && $fields['assigned_to'] !== $task->assigned_to) {
+            if (!auth()->user()->isAdmin() && !$this->isProjectLeader(auth()->user(), $task->project_id)) {
+                unset($fields['assigned_to']);
+            }
+        }
+
         $task->update($fields);
 
+        return response()->json($task->load(['user', 'project', 'assignedUser']));
+    }
+
+
+
+    public function updateStatus(Request $request, Task $task)
+    {
+        $this->authorize('update', $task);
+
+        $request->validate([
+            'status' => 'required|in:todo,in_progress,done'
+        ]);
+
+        $task->update(['status' => $request->status]);
 
         return response()->json($task);
     }
+
 
 
     public function destroy(string $id)
@@ -73,4 +105,15 @@ class TaskController extends Controller
             'message' => 'Succesfully Deleted Task'
           ]);
     }
+
+    private function isProjectLeader(User $user, $projectId)
+    {
+        return $user->projectMembers()
+            ->where('project_id', $projectId)
+            ->where('role', 'leader')
+            ->exists();
+    }
+
+
+
 }

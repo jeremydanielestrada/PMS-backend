@@ -22,8 +22,16 @@ class Task extends Model
 
     public function subtasks():HasMany{
 
-        return $this->hasMany(SubTask::class,'task_id')
-;    }
+        return $this->hasMany(SubTask::class,'task_id');
+    }
+
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+
+
 
     protected $fillable = [
         'project_id',
