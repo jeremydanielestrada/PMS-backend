@@ -37,7 +37,7 @@ class TaskRequest extends FormRequest
         }else if(request()->routeIs('tasks.update')){
             return [
                     'project_id'   => 'sometimes|exists:projects,id',
-                    'assigned_to' => 'sometimes|exists:users,id',
+                    'assigned_to'  => 'sometimes|exists:users,id',
                     'title'        => 'sometimes|required|string|max:255',
                     'description'  => 'sometimes|nullable|string|max:255',
                     'status'       => 'sometimes|required|string|max:255',
