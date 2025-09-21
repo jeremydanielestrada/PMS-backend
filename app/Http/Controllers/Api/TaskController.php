@@ -52,7 +52,7 @@ class TaskController extends Controller
 
         $fields = $request->validated();
 
-        $task->updated($fields);
+        $task->update($fields);
 
 
         return response()->json($task);

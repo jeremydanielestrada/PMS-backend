@@ -4,8 +4,6 @@ namespace App\Policies;
 
 use App\Models\ProjectMember;
 use App\Models\User;
-use App\Models\Project;
-use Illuminate\Auth\Access\Response;
 
 class ProjectMemberPolicy
 {
@@ -22,20 +20,20 @@ class ProjectMemberPolicy
 
 
 
-    public function create(User $user,  Project $project){
-       return $user->isLeader() || $project->id === $project->owner_id;
+     public function create(User $user)
+    {
+        // Allow admins (handled by before) or project leaders
+        return $user->isProjectLeader();
     }
 
 
 
-    public function update(User $user, Project $project){
-        return $user->isLeader() || $project->id === $project->owner_id;
+
+    public function delete(User $user, ProjectMember $member)
+    {
+        // Allow admins or project owner or project leaders
+        $project = $member->project;
+        return $user->id === $project->owner_id || $user->isProjectLeader();
     }
-
-
-
-    public function delete(User $user,  Project $project){
-         return $user->isLeader() || $project->id === $project->owner_id;
-    }
-
 }
+

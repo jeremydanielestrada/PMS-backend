@@ -26,6 +26,11 @@ class User extends Authenticatable
     }
 
 
+     public function projectMembers(): HasMany
+    {
+        return $this->hasMany(ProjectMember::class, 'user_id');
+    }
+
 
      public function activity_logs(): HasMany
     {
@@ -57,9 +62,12 @@ class User extends Authenticatable
     }
 
 
-     public function isLeader(){
-        return $this->role === 'leader';
-    }
+    public function isProjectLeader()
+{
+    return $this->projectMembers()->where('role', 'leader')->exists();
+}
+
+
 
     /**
      * The attributes that should be hidden for serialization.

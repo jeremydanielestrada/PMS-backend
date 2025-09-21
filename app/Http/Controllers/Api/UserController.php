@@ -10,7 +10,7 @@ class UserController extends Controller
 {
 
     public function index(){
-      $users = User::with(['projects','tasks'])
+      $users = User::with(['projects', 'projectMembers','tasks'])
       ->where('role', '!=', 'admin')
       -> get();
 

@@ -24,4 +24,10 @@ class ProjectMember extends Model
         'user_id',
         'role',
     ];
+
+
+
+     public function isLeader(){
+        return $this->role === 'leader';
+    }
 }

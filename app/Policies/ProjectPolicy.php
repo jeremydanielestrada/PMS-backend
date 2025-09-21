@@ -27,14 +27,14 @@ class ProjectPolicy
 
 
 
-         public function update(User $user,  Project $project)
+     public function update(User $user,  Project $project)
     {
         return $user->isAdmin() || $project->id === $project->owner_id;
     }
 
 
 
-         public function delete(User $user,  Project $project)
+     public function delete(User $user,  Project $project)
     {
         return $user->isAdmin() || $project->id === $project->owner_id;
     }
