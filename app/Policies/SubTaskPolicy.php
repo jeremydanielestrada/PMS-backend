@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\SubTask;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use \App\Models\Task;
 
 class SubTaskPolicy
 {
@@ -17,39 +17,51 @@ class SubTaskPolicy
             return true;
         }
 
-         return null;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, SubTask $subTask): bool
     {
         return $subTask->task->project->members->pluck('user_id')->contains($user->id);
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user, Subtask $subTask): bool
+
+   public function create(User $user, $taskId = null)
     {
-        return $subTask->task->assigned_to === $user->id;
+        if (!$taskId) return false;
+
+        $task =Task::find($taskId);
+        if (!$task) return false;
+
+        // Can create if: task is assigned to user OR user is project leader
+        return $task->assigned_to === $user->id ||
+               $this->isProjectLeader($user, $task->project_id);
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, SubTask $subTask): bool
+       public function update(User $user, SubTask $subtask)
     {
-       return $subTask->task->assigned_to === $user->id;
+        $task = $subtask->task;
+
+        // Can update if: task owner OR project leader
+        return $task->assigned_to === $user->id ||
+               $this->isProjectLeader($user, $task->project_id);
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, SubTask $subTask): bool
+
+    public function delete(User $user, SubTask $subtask)
     {
-        return $subTask->task->assigned_to === $user->id;
+        $task = $subtask->task;
+
+        // Can delete if: task owner OR project leader
+        return $task->assigned_to === $user->id ||
+               $this->isProjectLeader($user, $task->project_id);
+    }
+
+    private function isProjectLeader(User $user, $projectId)
+    {
+        return $user->projectMembers()
+            ->where('project_id', $projectId)
+            ->where('role', 'leader')
+            ->exists();
     }
 
 }
