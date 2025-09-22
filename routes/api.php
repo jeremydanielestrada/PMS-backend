@@ -1,7 +1,5 @@
 <?php
 
-use GuzzleHttp\Middleware;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProjectController;
@@ -9,7 +7,6 @@ use App\Http\Controllers\Api\ProjectMemberController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\SubTaskController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Middleware\isAdmin;
 
 
 //Public routes
@@ -31,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tasks',TaskController::class);
     Route::put('tasks/{task}/status', [TaskController::class, 'updateStatus']);
     Route::apiResource('subtasks',SubTaskController::class);
+    Route::put('subtasks/{subtask}/toggle', [SubTaskController::class, 'toggleComplete']);
     Route::get('/users',[UserController::class,'index']);
 });
 

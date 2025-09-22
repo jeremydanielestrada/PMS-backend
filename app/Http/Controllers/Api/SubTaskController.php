@@ -75,7 +75,7 @@ class SubTaskController extends Controller
 
         $fields = $request->validated();
 
-        $subtask->update($fields->only(['title', 'description', 'is_completed']));
+       $subtask->update($fields);
 
         return response()->json($subtask->load('task'));
     }

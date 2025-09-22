@@ -15,7 +15,7 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        $query = Task::with([ 'project', 'assignedUser']);
+        $query = Task::with([ 'project', 'assignedUser', 'subtasks']);
 
         // Filter by project if specified
         if ($request->has('project_id')) {
@@ -71,7 +71,7 @@ class TaskController extends Controller
 
         $task->update($fields);
 
-        return response()->json($task->load([ 'project', 'assignedUser']));
+        return response()->json($task->load([ 'project', 'assignedUser', 'subtasks']));
     }
 
 
