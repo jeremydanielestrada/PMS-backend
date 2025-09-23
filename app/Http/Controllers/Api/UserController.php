@@ -19,4 +19,15 @@ class UserController extends Controller
     }
 
 
+
+
+    //get data of auth users
+    public function authUser(){
+    $user = User::with(['projects', 'tasks', 'projectMembers'])
+        ->find(auth()->id());
+
+    return response()->json($user);
+}
+
+
 }

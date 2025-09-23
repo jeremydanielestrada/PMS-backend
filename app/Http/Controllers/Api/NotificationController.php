@@ -10,14 +10,15 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = auth()->user()->notifications()
+        $notifications = auth()->user()
+            ->notifications()
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->get();
 
         return response()->json($notifications);
     }
 
-    public function markAsRead($id)
+    public function markAsRead(string $id)
     {
         $notification = auth()->user()->notifications()->findOrFail($id);
         $notification->update(['is_read' => true]);
@@ -25,7 +26,7 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Marked as read']);
     }
 
-     public function markAllAsRead()
+    public function markAllAsRead()
     {
         auth()->user()->notifications()
             ->where('is_read', false)
@@ -33,6 +34,4 @@ class NotificationController extends Controller
 
         return response()->json(['message' => 'All notifications marked as read']);
     }
-
-
 }

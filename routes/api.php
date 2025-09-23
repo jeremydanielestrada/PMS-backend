@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\SubTaskController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Models\User;
 
 
 //Public routes
@@ -31,7 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('subtasks',SubTaskController::class);
     Route::put('subtasks/{subtask}/toggle', [SubTaskController::class, 'toggleComplete']);
     Route::get('/users',[UserController::class,'index']);
+    Route::get('/user',[UserController::class,'authUser']);
     Route::apiResource('notifications', NotificationController::class);
+    Route::patch('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
 
 
