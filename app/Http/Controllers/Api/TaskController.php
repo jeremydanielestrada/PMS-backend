@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
+use App\Events\TaskUpdated;
 
 class TaskController extends Controller
 {
@@ -70,6 +71,7 @@ class TaskController extends Controller
         }
 
         $task->update($fields);
+        broadcast(new TaskUpdated($task));
 
         return response()->json($task->load([ 'project', 'assignedUser', 'subtasks']));
     }
