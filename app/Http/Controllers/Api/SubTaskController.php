@@ -71,11 +71,11 @@ class SubTaskController extends Controller
     {
         $subtask = SubTask::findOrFail($id);
 
-         $this->authorize('update',$subtask);
+        $this->authorize('update',$subtask);
 
         $fields = $request->validated();
 
-       $subtask->update($fields);
+        $subtask->update($fields);
 
         return response()->json($subtask->load('task'));
     }
@@ -93,12 +93,12 @@ class SubTaskController extends Controller
 
     public function destroy(string $id)
     {
-         $subtask = SubTask::findOrFail($id);
+        $subtask = SubTask::findOrFail($id);
 
-         $this->authorize('delete',$subtask);
+        $this->authorize('delete',$subtask);
 
-         $subtask->delete();
+        $subtask->delete();
 
-         return response()->json('Subtask deleted');
+        return response()->json('Subtask deleted');
     }
 }

@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('type');
-            $table->boolean('is_read');
-            $table->timestamps();
+         Schema::table('notifications', function (Blueprint $table) {
+            $table->renameColumn('varchar', 'type');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->renameColumn('new_name', 'old_name');
+        });
     }
 };
