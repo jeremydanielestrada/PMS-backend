@@ -9,10 +9,18 @@ use App\Models\User;
 class UserController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
+
+        $search = $request->query('search');
+        $perPage = $request->query('per_page', 10);
+
       $users = User::with(['projects', 'projectMembers','tasks'])
       ->where('role', '!=', 'admin')
-      -> get();
+      -> when($search, function($query, $search){
+        $query->where('first_name', 'like', "%{$search}%")
+               ->orWhere('email', 'like', "%{$search}%");
+          }
+       )->paginate($perPage);
 
 
      return response()->json($users);
