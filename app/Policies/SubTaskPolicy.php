@@ -21,19 +21,19 @@ class SubTaskPolicy
 
     public function view(User $user, SubTask $subTask): bool
     {
-        return $subTask->task->project->members->pluck('user_id')->contains($user->id);
+        // Check if user is a member of the project
+        return $user->projectMembers()
+            ->where('project_id', $subTask->task->project_id)
+            ->exists();
     }
 
 
-   public function create(User $user, $taskId = null)
+   public function create(User $user, $task)
     {
-        if (!$taskId) return false;
-
-        $task =Task::find($taskId);
         if (!$task) return false;
 
         // Can create if: task is assigned to user OR user is project leader
-        return $task->assigned_to === $user->id ||
+         return $task->assigned_to === $user->id ||
                $this->isProjectLeader($user, $task->project_id);
     }
 

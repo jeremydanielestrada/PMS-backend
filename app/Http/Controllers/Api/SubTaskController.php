@@ -42,13 +42,16 @@ class SubTaskController extends Controller
     {
         $fields = $request->validated();
 
-        $this->authorize('create',SubTask::class);
+        $task = Task::findOrFail($fields['task_id']);
+
+        $this->authorize('create',[SubTask::class, $task]);
 
         $subtask = SubTask::create($fields);
 
         return response()->json(
                    [
-                          $subtask, 'message' => 'Created subtask succesfully'
+                           'subtask' => $subtask,
+                           'message' => 'Created subtask successfully'
                          ]);
     }
 
