@@ -9,6 +9,7 @@ use App\Http\Requests\TaskRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
 use App\Events\TaskUpdated;
+use App\Events\TaskAssigned;
 use App\Models\Project;
 
 class TaskController extends Controller
@@ -45,6 +46,7 @@ class TaskController extends Controller
         $this->authorize('create',[Task::class, $project]);
 
         $task = Task::create($fields);
+        broadcast(new TaskAssigned($task));
 
         return response()->json($task, 201);
     }

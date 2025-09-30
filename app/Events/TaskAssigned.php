@@ -9,28 +9,31 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Task;
 
-class TaskAssigned
+class TaskAssigned implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable,  SerializesModels,InteractsWithSockets;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
+    public $task;
+    public function __construct(Task $task)
     {
-        //
+        $this->task = $task->load(['assignedUser', 'project']);
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
+
+    public function broadcastOn(): Channel
+    {
+        return new Channel('project.' . $this->task->assigned_to);
+    }
+
+
+
+     public function broadcastWith()
     {
         return [
-            new PrivateChannel('channel-name'),
+            'task' => $this->task,
+            'message' => 'You are assigned to a task'
         ];
     }
 }
