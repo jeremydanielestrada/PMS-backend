@@ -44,7 +44,7 @@ class ProjectController extends Controller
         $this->authorize('create', Project::class); //Only the admin  can create a project
 
        // If admin provided owner_id, use it; otherwise use current user
-         $fields['owner_id'] = (auth()->user()->role === 'admin' && isset($fields['owner_id']))
+         $fields['owner_id'] = (auth()->user()->isAdmin() && isset($fields['owner_id']))
         ? $fields['owner_id']
         : auth()->id();
 
